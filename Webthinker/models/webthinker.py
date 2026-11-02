@@ -1049,7 +1049,7 @@ class WebThinkerAgent:
                 poisoned_corpus_path=args.poisoned_corpus_path,
                 poisoned_index_dir=args.poisoned_index_dir,
                 model_name=retrieval_model_name,
-                device="cuda:2" if torch.cuda.is_available() else "cpu"
+                device="cuda:0" if torch.cuda.is_available() else "cpu"
             )
         else:
             self.retriever = None

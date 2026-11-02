@@ -145,7 +145,7 @@ def main():
                 corpus_path=args.corpus_path, 
                 index_dir=args.index_dir, 
                 model_name=args.retrieval_model_name,
-                device="cuda:2"
+                device="cuda:0"
             )
         
         # 2. Poisoned Index (if applicable)
@@ -158,7 +158,7 @@ def main():
                 corpus_path=args.poisoned_corpus_path, 
                 index_dir=args.poisoned_index_dir, 
                 model_name=args.retrieval_model_name,
-                device="cuda:2"
+                device="cuda:0"
             )
 
     # Load Data

@@ -912,6 +912,8 @@ def main(args):
         m="qwq"
     elif "clean_deepseek_32b.json" in args.input_path:
         m="deepseek_32b"
+    elif "clean_qwen7b.json" in args.input_path:
+        m="qwen7b"
     output_tag = "BAIT_DOC" if args.type == "ours" else args.type
     output_path = WEBTHINKER_ROOT / "datasets" / f"{args.dataset}_poisoned_corpus" / f"WEBTHINKER_{output_tag}_{m}.jsonl"
 

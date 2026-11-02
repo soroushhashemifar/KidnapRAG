@@ -21,6 +21,7 @@ parser.add_argument("--attack_method",type=str,default="clean")
 parser.add_argument("--seed",type=int,default=1)
 parser.add_argument("--model_path",type=str)
 parser.add_argument("--dataset",type=str)
+parser.add_argument("--max_samples", type=int, default=-1, help="Max samples to process (for debugging)")
 args = parser.parse_args()
 
 if "Llama-3.3-70B-Instruct" in args.model_path:
@@ -33,6 +34,16 @@ if "Llama-3.3-70B-Instruct" in args.model_path:
         gpu_memory_utilization=0.8 # A100(48GB) 기준, 인덱스(~11GB)를 고려하여 60%만 사용
     )
     cuda_device="cuda:3"
+elif "Qwen2.5-7B-Instruct" in args.model_path:
+    llm_model = LLM(
+        model=args.model_path, 
+        dtype="float16", 
+        tensor_parallel_size=1,
+        trust_remote_code=True,
+        max_model_len=30000,
+        gpu_memory_utilization=0.8 # A100(48GB) 기준, 인덱스(~11GB)를 고려하여 60%만 사용
+    )
+    cuda_device="cuda:0"
 else:
     llm_model = LLM(
         model=args.model_path, 
@@ -48,6 +59,9 @@ if "Qwen2.5-32B-Instruct" in args.model_path:
 
 elif "Llama-3.3-70B-Instruct" in args.model_path:
     m = "llama70b"
+
+elif "Qwen2.5-7B-Instruct" in args.model_path:
+    m = "qwen7b"
 
 # Initialize vLLM (limit memory to leave room for retriever index)
 print("Initializing vLLM model...")
@@ -330,6 +344,9 @@ if __name__ == "__main__":
     if args.dry_run:
         items = items[:1]
         print("Dry run enabled: only the first sample will be processed.")
+    elif args.max_samples > 0:
+        items = items[:args.max_samples]
+        print(f"Max samples limit: processing the first {args.max_samples} samples.")
 
     results = []
     asr_success_count = 0
