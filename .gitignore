@@ -2,3 +2,5 @@
 # Exclude datasets
 datasets/
 **/datasets/
+
+temp_data/
