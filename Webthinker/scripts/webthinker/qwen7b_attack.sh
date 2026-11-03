@@ -92,6 +92,6 @@ CUDA_VISIBLE_DEVICES=0 python3 scripts/run_attack.py \
     --max_search_limit 10 \
     --concurrent_limit 32 \
     --poisoned_corpus_path "$POISON_CORPUS_PATH" \
-    --max_samples 100
+    --max_samples 10
 
 echo "[Script] Finished. Cleaning up..."

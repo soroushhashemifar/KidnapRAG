@@ -89,6 +89,7 @@ CUDA_VISIBLE_DEVICES=0 python3 scripts/run_attack.py \
     --corpus_path "$CORPUS_PATH" \
     --retrieval_model_name "$RETRIEVAL_MODEL" \
     --max_search_limit 10 \
-    --concurrent_limit 32
+    --concurrent_limit 32 \
+    --max_samples 10
 
 echo "[Script] Finished. Cleaning up..."

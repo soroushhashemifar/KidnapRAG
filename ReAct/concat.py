@@ -59,6 +59,29 @@ if args.mode == "ours":
 
         print(f"saved: {output_file} ({len(modified_base_lines)} + {len(add_lines)} lines)")
 
+elif args.mode == "wo_B":
+    base_file = f"./datasets/{args.dataset}/REACT_wo_B_{args.gen_model}.jsonl"
+    if not os.path.exists(base_file):
+        print(f"wo_B file not found: {base_file}")
+    else:
+        for scene in ["BCM"]:
+            add_file = f"./datasets/Chain_Link_and_Mal_Ins_DOCS/{scene}.jsonl"
+            output_file = f"./datasets/{args.dataset}/REACT_{scene}_woB_{args.gen_model}.jsonl"
+
+            with open(base_file, "r", encoding="utf-8") as f:
+                base_lines = f.readlines()
+            with open(add_file, "r", encoding="utf-8") as f:
+                add_lines = f.readlines()
+
+            # Skip the first 5 lines of the scene file (its own C1 block);
+            # the subquery-mapped C1 is already in the wo_B file.
+            c1_block = 5
+            add_lines_no_c1 = add_lines[c1_block:]
+
+            with open(output_file, "w", encoding="utf-8") as f:
+                f.writelines(base_lines)
+                f.writelines(add_lines_no_c1)
+            print(f"saved: {output_file} ({len(base_lines)} + {len(add_lines_no_c1)} lines)")
 
 else:
     raise ValueError(f"unknown mode: {args.mode}")

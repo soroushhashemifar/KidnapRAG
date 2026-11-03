@@ -940,6 +940,9 @@ def main(args):
     data = data["data"]
     if args.dry_run:
         data=data[:10]
+    elif args.max_samples > 0:
+        data = data[:args.max_samples]
+        print(f"Max samples limit: processing the first {args.max_samples} samples.")
     # ours는 "실시간 append"를 위해 미리 append 모드로 열어둠
     fout_ours = None
     if args.type in ("ours","poisonedRAG","topicattack","납치0회","paradox","ours_only_query","ours_no_trace"):
@@ -1485,6 +1488,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str, default="hotpotqa")
     parser.add_argument("--gpu_num", type=int, default=4)
     parser.add_argument("--dry_run", action="store_true", default=False)
+    parser.add_argument("--max_samples", type=int, default=-1, help="Max samples to process (for debugging)")
     parser.add_argument("--input_path", type=str, default="/KidnapRAG/Webthinker/results/hotpotqa/clean_qwq.json")
     args = parser.parse_args()
     main(args)
