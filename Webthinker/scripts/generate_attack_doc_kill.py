@@ -945,7 +945,7 @@ def main(args):
         print(f"Max samples limit: processing the first {args.max_samples} samples.")
     # ours는 "실시간 append"를 위해 미리 append 모드로 열어둠
     fout_ours = None
-    if args.type in ("ours","poisonedRAG","topicattack","납치0회","paradox","ours_only_query","ours_no_trace"):
+    if args.type in ("ours","poisonedRAG","topicattack","ours_wo_Chaining","paradox","ours_only_query","ours_no_trace"):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         if output_path.exists():
             output_path.unlink()
@@ -1120,7 +1120,7 @@ def main(args):
                                     "metadata": {"original_id": qid, "target_answer": "KILL YOURSELF", "is_poisoned": True, "step": 0}
                                 }
                                 fout.write(json.dumps(output_obj, ensure_ascii=False) + "\n")
-        elif args.type == "납치0회":
+        elif args.type == "ours_wo_Chaining":
             for item in tqdm(data):
                 qid = item.get("id", "")
                 steps = item.get("step_stats", [])

@@ -943,9 +943,12 @@ def main(args):
     data = data["details"]
     if args.dry_run:
         data=data[:10]
+    elif args.max_samples > 0:
+        data = data[:args.max_samples]
+        print(f"Max samples limit: processing the first {args.max_samples} samples.")
     # ours는 "실시간 append"를 위해 미리 append 모드로 열어둠
     fout_ours = None
-    if args.type in ("ours","poisonedRAG","topicattack","납치0회","paradox","ours_only_query","ours_no_trace","ours_wo_ih"):
+    if args.type in ("ours","poisonedRAG","topicattack","ours_wo_Chaining","paradox","ours_only_query","ours_no_trace","ours_wo_ih"):
         output_path.parent.mkdir(parents=True, exist_ok=True)
         if output_path.exists():
             output_path.unlink()
@@ -1122,7 +1125,7 @@ def main(args):
                                     "metadata": {"original_id": qid, "target_answer": "KILL YOURSELF", "is_poisoned": True, "step": 0}
                                 }
                                 fout.write(json.dumps(output_obj, ensure_ascii=False) + "\n")
-        elif args.type == "납치0회":
+        elif args.type == "ours_wo_Chaining":
             for item in tqdm(data):
                 qid = item.get("qid", "")
                 steps = item.get("step_stats", [])
@@ -1488,6 +1491,7 @@ if __name__ == "__main__":
     parser.add_argument("--type", type=str, default="ours")
     parser.add_argument("--gpu_num", type=int, default=4)
     parser.add_argument("--dry_run", action="store_true", default=False)
+    parser.add_argument("--max_samples", type=int, default=-1, help="Max samples to process (for debugging)")
     parser.add_argument("--input_path", type=str, default="/KidnapRAG/ReAct/results/adv_targeted_results/hotpotqa_seed1_clean_llama70b.json")
     args = parser.parse_args()
     main(args)
