@@ -915,8 +915,8 @@ def main(args):
         m="qwen25"
     elif "clean_llama70b.json" in args.input_path:
         m="llama70b"
-    elif "clean_qwen7b.json" in args.input_path:
-        m="qwen7b"
+    elif "clean_qwen.json" in args.input_path:
+        m="qwen"
     output_tag = "BAIT_DOC" if args.type == "ours" else args.type
     output_path = REACT_ROOT / "datasets" / args.dataset / f"REACT_{output_tag}_{m}.jsonl"
 
