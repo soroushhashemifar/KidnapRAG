@@ -931,6 +931,7 @@ def main(args):
             model=model_id,
             tensor_parallel_size=args.gpu_num,
             trust_remote_code=True,
+            dtype="float16", 
             gpu_memory_utilization=0.9,
             max_model_len=max_len,
             enforce_eager=True

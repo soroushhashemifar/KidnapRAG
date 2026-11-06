@@ -50,8 +50,9 @@ else:
         dtype="float16", 
         tensor_parallel_size=1,
         trust_remote_code=True,
-        max_model_len=30000,
-        gpu_memory_utilization=0.8 # A100(48GB) 기준, 인덱스(~11GB)를 고려하여 60%만 사용
+        max_model_len=32000,
+        enforce_eager=True,
+        gpu_memory_utilization=0.9 # A100(48GB) 기준, 인덱스(~11GB)를 고려하여 60%만 사용
     )
     cuda_device="cuda:0"
 
@@ -143,7 +144,7 @@ retriever = E5_Retriever(
     poisoned_index_dir=poisoned_index_path, 
     poisoned_corpus_path=poisoned_corpus_path,
     model_name=os.environ.get("KIDNAPRAG_E5_MODEL", "intfloat/e5-large-v2"),
-    device=cuda_device
+    device="cpu" #cuda_device
 )
 
 env = E5WikiEnv(retriever, k=5)
