@@ -65,6 +65,9 @@ elif "Llama-3.3-70B-Instruct" in args.model_path:
 elif "Qwen" in args.model_path:
     m = "qwen"
 
+elif "Mistral" in args.model_path:
+    m = "mistral"
+
 # Initialize vLLM (limit memory to leave room for retriever index)
 print("Initializing vLLM model...")
 
