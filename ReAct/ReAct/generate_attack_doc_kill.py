@@ -918,7 +918,11 @@ def main(args):
     elif "clean_qwen.json" in args.input_path:
         m="qwen"
     elif "clean_mistral.json" in args.input_path:
-            m="mistral"
+        m="mistral"
+    elif "clean_llama.json" in args.input_path:
+        m="llama"
+    elif "clean_phi.json" in args.input_path:
+        m="phi"
     output_tag = "BAIT_DOC" if args.type == "ours" else args.type
     output_path = REACT_ROOT / "datasets" / args.dataset / f"REACT_{output_tag}_{m}.jsonl"
 
@@ -936,6 +940,8 @@ def main(args):
             dtype="float16", 
             gpu_memory_utilization=0.9,
             max_model_len=max_len,
+            structured_outputs_config={"backend": "auto"}, 
+            quantization="awq" if "awq" in model_id else None,
             enforce_eager=True
         )
         tokenizer = AutoTokenizer.from_pretrained(model_id)
