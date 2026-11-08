@@ -52,7 +52,7 @@ else:
         trust_remote_code=True,
         max_model_len=32000,
         enforce_eager=True,
-        quantization="awq" if "awq" in args.model_path else None,
+        quantization="awq" if "awq" in args.model_path.lower() else None,
         gpu_memory_utilization=0.9 # A100(48GB) 기준, 인덱스(~11GB)를 고려하여 60%만 사용
     )
     cuda_device="cuda:0"
@@ -63,16 +63,16 @@ if "Qwen2.5-32B-Instruct" in args.model_path:
 elif "Llama-3.3-70B-Instruct" in args.model_path:
     m = "llama70b"
 
-elif "Qwen" in args.model_path:
+elif "qwen" in args.model_path.lower():
     m = "qwen"
 
-elif "Mistral" in args.model_path:
+elif "mistral" in args.model_path.lower():
     m = "mistral"
 
-elif "Llama" in args.model_path:
+elif "llama" in args.model_path.lower():
     m = "llama"
 
-elif "Phi" in args.model_path:
+elif "phi" in args.model_path.lower():
     m = "phi"
 
 # Initialize vLLM (limit memory to leave room for retriever index)

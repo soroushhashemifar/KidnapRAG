@@ -7,6 +7,7 @@ from tqdm import tqdm
 from vllm import LLM, SamplingParams
 from transformers import AutoTokenizer
 import numpy as np
+import json_repair
 
 REACT_ROOT = Path(__file__).resolve().parents[1]
 KIDNAP_ROOT = REACT_ROOT.parent
@@ -515,11 +516,24 @@ def run_batch_inference_wo_sr(data, model, tokenizer, sampling_params, fout):
         for meta, output in zip(batch_inputs, outputs):
             try:
                 generated_text = output.outputs[0].text
-                # print(generated_text)
                 result = json.loads(generated_text)
+                json_parse_failed = False
             except Exception as e:
+                print(generated_text)
                 print(f"[JSON PARSE ERROR] id={meta['qid']} err={e}")
-                continue
+                json_parse_failed = True
+
+            if json_parse_failed:
+                try:
+                    generated_text = output.outputs[0].text
+                    fixed = json_repair.loads(generated_text)
+                except:
+                    print("fixed:", fixed)
+                    print(f"[FIXED JSON PARSE ERROR] id={meta['qid']} err={e}")
+                    continue
+
+                result = fixed
+                
             for i in range(1,6):
                 key = f"doc{i}"
                 bait_doc = result.get(key,"")
@@ -599,11 +613,24 @@ def run_batch_inference_wo_ih(data, model, tokenizer, sampling_params, fout):
         for meta, output in zip(batch_inputs, outputs):
             try:
                 generated_text = output.outputs[0].text
-                # print(generated_text)
                 result = json.loads(generated_text)
+                json_parse_failed = False
             except Exception as e:
+                print(generated_text)
                 print(f"[JSON PARSE ERROR] id={meta['qid']} err={e}")
-                continue
+                json_parse_failed = True
+
+            if json_parse_failed:
+                try:
+                    generated_text = output.outputs[0].text
+                    fixed = json_repair.loads(generated_text)
+                except:
+                    print("fixed:", fixed)
+                    print(f"[FIXED JSON PARSE ERROR] id={meta['qid']} err={e}")
+                    continue
+
+                result = fixed
+                
             for i in range(1,6):
                 key = f"doc{i}"
                 bait_doc = result.get(key,"")
@@ -683,11 +710,24 @@ def run_batch_inference(data, model, tokenizer, sampling_params, fout):
         for meta, output in zip(batch_inputs, outputs):
             try:
                 generated_text = output.outputs[0].text
-                # print(generated_text)
                 result = json.loads(generated_text)
+                json_parse_failed = False
             except Exception as e:
+                print(generated_text)
                 print(f"[JSON PARSE ERROR] id={meta['qid']} err={e}")
-                continue
+                json_parse_failed = True
+
+            if json_parse_failed:
+                try:
+                    generated_text = output.outputs[0].text
+                    fixed = json_repair.loads(generated_text)
+                except:
+                    print("fixed:", fixed)
+                    print(f"[FIXED JSON PARSE ERROR] id={meta['qid']} err={e}")
+                    continue
+
+                result = fixed
+
             for i in range(1,6):
                 key = f"doc{i}"
                 bait_doc = result.get(key,"")
@@ -768,11 +808,24 @@ def run_batch_inference_only_query(data, model, tokenizer, sampling_params, fout
         for meta, output in zip(batch_inputs, outputs):
             try:
                 generated_text = output.outputs[0].text
-                # print(generated_text)
                 result = json.loads(generated_text)
+                json_parse_failed = False
             except Exception as e:
+                print(generated_text)
                 print(f"[JSON PARSE ERROR] id={meta['qid']} err={e}")
-                continue
+                json_parse_failed = True
+
+            if json_parse_failed:
+                try:
+                    generated_text = output.outputs[0].text
+                    fixed = json_repair.loads(generated_text)
+                except:
+                    print("fixed:", fixed)
+                    print(f"[FIXED JSON PARSE ERROR] id={meta['qid']} err={e}")
+                    continue
+
+                result = fixed
+                
             for i in range(1,6):
                 key = f"doc{i}"
                 bait_doc = result.get(key,"")
@@ -852,11 +905,24 @@ def run_batch_inference_no_trace(data, model, tokenizer, sampling_params, fout):
         for meta, output in zip(batch_inputs, outputs):
             try:
                 generated_text = output.outputs[0].text
-                # print(generated_text)
                 result = json.loads(generated_text)
+                json_parse_failed = False
             except Exception as e:
+                print(generated_text)
                 print(f"[JSON PARSE ERROR] id={meta['qid']} err={e}")
-                continue
+                json_parse_failed = True
+
+            if json_parse_failed:
+                try:
+                    generated_text = output.outputs[0].text
+                    fixed = json_repair.loads(generated_text)
+                except:
+                    print("fixed:", fixed)
+                    print(f"[FIXED JSON PARSE ERROR] id={meta['qid']} err={e}")
+                    continue
+
+                result = fixed
+                
             for i in range(1,6):
                 key = f"doc{i}"
                 bait_doc = result.get(key,"")
@@ -941,7 +1007,7 @@ def main(args):
             gpu_memory_utilization=0.9,
             max_model_len=max_len,
             structured_outputs_config={"backend": "auto"}, 
-            quantization="awq" if "awq" in model_id else None,
+            quantization="awq" if "awq" in model_id.lower() else None,
             enforce_eager=True
         )
         tokenizer = AutoTokenizer.from_pretrained(model_id)

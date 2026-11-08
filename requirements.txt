@@ -10,3 +10,4 @@ gym
 beautifulsoup4
 accelerate
 matplotlib
+json-repair
