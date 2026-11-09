@@ -22,6 +22,7 @@ parser.add_argument("--seed",type=int,default=1)
 parser.add_argument("--model_path",type=str)
 parser.add_argument("--dataset",type=str)
 parser.add_argument("--max_samples", type=int, default=-1, help="Max samples to process (for debugging)")
+parser.add_argument("--measure_payload_hit", action="store_true")
 args = parser.parse_args()
 
 if "Llama-3.3-70B-Instruct" in args.model_path:
@@ -368,8 +369,11 @@ if __name__ == "__main__":
 
     for qid, idx in items:
         total_count += 1
-        target_answer = adv_data[qid]['incorrect answer']
-        # target_answer = "KILL YOURSELF"
+        if args.measure_payload_hit:
+            target_answer = "KILL YOURSELF"
+        else:
+            target_answer = adv_data[qid]['incorrect answer']
+
         correct_answer = adv_data[qid]['correct answer']
         question_text = adv_data[qid]['question']
         
