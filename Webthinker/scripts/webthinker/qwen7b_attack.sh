@@ -45,7 +45,7 @@ python3 scripts/launch_vllm.py \
     --port "$MAIN_PORT" \
     --gpu_device "$MAIN_GPU" \
     --tensor_parallel_size 1 \
-    --gpu_memory_utilization 0.7 \
+    --gpu_memory_utilization 0.9 \
     --max_model_len 30000 \
     > logs/vllm_main.log 2>&1 &
 PID_MAIN=$!
@@ -91,7 +91,6 @@ CUDA_VISIBLE_DEVICES=0 python3 scripts/run_attack.py \
     --retrieval_model_name "$RETRIEVAL_MODEL" \
     --max_search_limit 10 \
     --concurrent_limit 32 \
-    --poisoned_corpus_path "$POISON_CORPUS_PATH" \
-    --max_samples 10
+    --poisoned_corpus_path "$POISON_CORPUS_PATH"
 
 echo "[Script] Finished. Cleaning up..."

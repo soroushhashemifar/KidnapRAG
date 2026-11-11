@@ -39,6 +39,8 @@ def main():
         cmd.extend(["--reasoning-parser", "deepseek_r1"])
     if args.max_model_len is not None:
         cmd.extend(["--max-model-len", str(args.max_model_len)])
+    if "awq" in args.model_path.lower():
+        cmd.extend(["--quantization", "awq"])
         
     print(f"[Launcher] Starting vLLM on Port {args.port} (GPU {args.gpu_device})")
     print(f"[Launcher] Command: {' '.join(cmd)}")
